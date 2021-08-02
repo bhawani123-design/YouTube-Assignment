@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css"
+    />
+    <title>YouTube App</title>
+    <style>
+      .nav {
+        height: 100px;
+        /* border: 1px solid black; */
+        line-height: 100px;
+        /* position: fixed; */
+        border-bottom: 1px solid rgba(71, 70, 70, 0.26);
+        z-index: 1;
+      }
+      .nav img {
+        width: 100px;
+        vertical-align: middle;
+        margin-left: 10px;
+      }
+      .content {
+        display: grid;
+        grid-template-columns: 50% 50%;
+      }
+      .subD {
+        margin: 10px;
+        border: 1px solid black;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="nav" class="nav">
+      <img
+        src="https://www.pngitem.com/pimgs/m/508-5089004_youtube-logo-png-images-download-youtube-new-logo.png"
+        alt=""
+      />
+      <button class="mostPopular1" onclick="gotoMost1()">Search Video</button>
+    </div>
+    <div id="content" class="content"></div>
+  </body>
+</html>
+
+<script>
+  async function findVideos() {
+    let main_div = document.getElementById("content");
+    let res = await fetch(
+      `https://youtube.googleapis.com/youtube/v3/videos?part=contentDetails&chart=mostPopular&regionCode=IN&maxResults=25&key=AIzaSyDRpwyAwiIr-XPdNtmTg5J-q0Gx9XO0JAg`
+    );
+    // console.log("res:", res);
+    let data = await res.json();
+    console.log("data:", data);
+
+    let { items } = data;
+    items = items.filter((el) => {
+      return el.id !== undefined;
+    });
+
+    console.log("items:", items);
+    items.forEach(({ id }) => {
+      let subD = document.createElement("div");
+      subD.setAttribute("id", "subD");
+      subD.innerHTML = `<iframe width="560" 
+      height="315" 
+      src="https://www.youtube.com/embed/${id}" 
+      title="YouTube video player" frameborder="0" allow="accelerometer; 
+      autoplay; clipboard-write; encrypted-media; gyroscope; 
+      picture-in-picture" allowfullscreen></iframe>`;
+
+      main_div.append(subD);
+    });
+  }
+
+  function gotoMost1() {
+    window.location.href = "YoutubeApp.html";
+  }
+  findVideos();
+</script>
